@@ -109,11 +109,7 @@ impl Header {
 
 ## Creating the Content
 
-Now it's time to create the content for our window. You will almost reach for **GtkBoxes** when
-constructing your UI, creating your interface with a tree-like diagram. These boxes, when initialized,
-must be specified as either **Horizontal** or **Vertical** orientations.
-
-You will amost certainly reach for **GtkBoxes**
+Now it's time to create the content for our window. You will amost certainly reach for **GtkBoxes**
 for configuring your UI. These can be created with either a **Horizontal** or **Vertical**
 alignment. These boxes are where you will add all of your widgets, where they will be stacked
 according to the alignment of the box they are attached to.
