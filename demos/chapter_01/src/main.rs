@@ -1,4 +1,3 @@
-extern crate gtk;
 use gtk::*;
 use std::process;
 
@@ -36,11 +35,9 @@ impl App {
         let header = Header::new();
 
         // Set the headerbar as the title bar widget.
-        window.set_titlebar(&header.container);
+        window.set_titlebar(Some(&header.container));
         // Set the title of the window.
         window.set_title("App Name");
-        // Set the window manager class.
-        window.set_wmclass("app-name", "App name");
         // The icon the app will display.
         Window::set_default_icon_name("iconname");
 
@@ -61,7 +58,7 @@ impl Header {
         let container = HeaderBar::new();
 
         // Sets the text to display in the title section of the header bar.
-        container.set_title("App Name");
+        container.set_title(Some("App Name"));
         // Enable the window controls within this headerbar.
         container.set_show_close_button(true);
 

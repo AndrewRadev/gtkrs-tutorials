@@ -2,6 +2,7 @@
 authors = ["Michael Aaron Murphy <mmstickman@gmail.com>"]
 name = "cmark-editor"
 version = "0.1.0"
+edition = "2018"
 
 [dependencies]
 gdk = "0.6"

@@ -1,8 +1,5 @@
-extern crate gtk;
-#[macro_use]
-extern crate horrorshow;
-
 use gtk::*;
+use horrorshow::html;
 use std::process;
 
 fn main() {
@@ -24,7 +21,7 @@ fn main() {
         let right_pane = app.content.right_pane.clone();
         app.header.post.connect_clicked(move |_| {
             let inputs = (title.get_text(), tags.get_text(), get_buffer(&content));
-            if let (Some(title), Some(tags), Some(content)) = inputs {
+            if let (title, tags, Some(content)) = inputs {
                 right_pane.set_text(&generate_html(&title, &tags, &content));
             }
         });
@@ -41,7 +38,7 @@ fn main() {
 fn get_buffer(buffer: &TextBuffer) -> Option<String> {
     let start = buffer.get_start_iter();
     let end = buffer.get_end_iter();
-    buffer.get_text(&start, &end, true)
+    buffer.get_text(&start, &end, true).map(|t| t.into())
 }
 
 /// Generates the minified HTML that will be displayed in the right pane
@@ -95,11 +92,9 @@ impl App {
         let content = Content::new();
 
         // Set the headerbar as the title bar widget.
-        window.set_titlebar(&header.container);
+        window.set_titlebar(Some(&header.container));
         // Set the title of the window.
         window.set_title("HTML Articler");
-        // Set the window manager class.
-        window.set_wmclass("html-articler", "HTML Articler");
         // The icon the app will display.
         Window::set_default_icon_name("iconname");
         // Set the default size of the window.
@@ -124,13 +119,13 @@ impl Header {
         let container = HeaderBar::new();
 
         // Sets the text to display in the title section of the header bar.
-        container.set_title("HTML Articler");
+        container.set_title(Some("HTML Articler"));
         // Enable the window controls within this headerbar.
         container.set_show_close_button(true);
 
         // Create a button that will post the HTML article.
-        let post = Button::new_with_label("Post");
-        post.get_style_context().map(|x| x.add_class("suggested-action"));
+        let post = Button::with_label("Post");
+        post.get_style_context().add_class("suggested-action");
 
         container.pack_end(&post);
 
@@ -145,26 +140,26 @@ impl Content {
         // whereas the right pane is for the generated output.
         let container = Paned::new(Orientation::Horizontal);
         let left_pane = Box::new(Orientation::Vertical, 5);
-        let right_pane = TextBuffer::new(None);
-        let right_pane_view = TextView::new_with_buffer(&right_pane);
+        let right_pane = TextBuffer::new::<TextTagTable>(None);
+        let right_pane_view = TextView::with_buffer(&right_pane);
 
         // The left pane will consist of a title entry, tags entry, and content text view.
         let title = Entry::new();
         let tags = Entry::new();
-        let content = TextBuffer::new(None);
-        let content_view = TextView::new_with_buffer(&content);
+        let content = TextBuffer::new::<TextTagTable>(None);
+        let content_view = TextView::with_buffer(&content);
 
         // The label that we will display above the content box to describe it.
-        let content_label = Label::new("Content");
+        let content_label = Label::new(Some("Content"));
         content_label.set_halign(Align::Center);
 
         // Set placeholders within the entries to hint the user of the contents to enter.
-        title.set_placeholder_text("Insert Title");
-        tags.set_placeholder_text("Insert Colon-Delimited Tags");
+        title.set_placeholder_text(Some("Insert Title"));
+        tags.set_placeholder_text(Some("Insert Colon-Delimited Tags"));
 
         // Additionally set tooltips on the entries. Note that you may use either text or markup.
-        title.set_tooltip_text("Insert the title of article here");
-        tags.set_tooltip_markup("<b>tag_one</b>:<b>tag two</b>:<b> tag three</b>");
+        title.set_tooltip_text(Some("Insert the title of article here"));
+        tags.set_tooltip_markup(Some("<b>tag_one</b>:<b>tag two</b>:<b> tag three</b>"));
 
         // The right pane should disallow editing; and both editors should wrap by word.
         right_pane_view.set_editable(false);
@@ -172,8 +167,8 @@ impl Content {
         content_view.set_wrap_mode(WrapMode::Word);
 
         // Wrap the text views within scrolled windows, so that they can scroll.
-        let content_scroller = ScrolledWindow::new(None, None);
-        let right_pane_scrolled = ScrolledWindow::new(None, None);
+        let content_scroller = ScrolledWindow::new::<Adjustment, Adjustment>(None, None);
+        let right_pane_scrolled = ScrolledWindow::new::<Adjustment, Adjustment>(None, None);
         content_scroller.add(&content_view);
         right_pane_scrolled.add(&right_pane_view);
 

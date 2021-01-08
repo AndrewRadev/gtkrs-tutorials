@@ -2,7 +2,7 @@ use super::SaveDialog;
 use super::misc::*;
 use gtk::*;
 use sourceview::*;
-use state::ActiveMetadata;
+use crate::state::ActiveMetadata;
 use std::fs::OpenOptions;
 use std::io::{self, Write};
 use std::sync::RwLock;
@@ -69,7 +69,7 @@ fn write_data(path: Option<&ActiveMetadata>, data: &[u8]) -> io::Result<SaveActi
         file.write_all(&data)?;
         return Ok(SaveAction::Saved);
     }
-    
+
     let save_dialog = SaveDialog::new(None);
     if let Some(new_path) = save_dialog.run() {
         let mut file =

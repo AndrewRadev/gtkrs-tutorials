@@ -1,4 +1,4 @@
-use horrorshow::Raw;
+use horrorshow::{html, Raw};
 use horrorshow::helper::doctype;
 use pulldown_cmark::{html, Parser};
 

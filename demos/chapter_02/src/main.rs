@@ -1,4 +1,3 @@
-extern crate gtk;
 use gtk::*;
 use std::process;
 use std::sync::Arc;
@@ -102,8 +101,8 @@ impl Content {
 
         // The health info will be contained within a horizontal box within the vertical box.
         let health_info = Box::new(Orientation::Horizontal, 0);
-        let health_label = Label::new("Current Health:");
-        let health = Label::new(health.get_health().to_string().as_str());
+        let health_label = Label::new(Some("Current Health:"));
+        let health = Label::new(Some(health.get_health().to_string().as_str()));
 
         // Set the horizontal alignments of each of our objects.
         health_info.set_halign(Align::Center);
@@ -117,7 +116,7 @@ impl Content {
 
         // Create a message label that will later be modified by the application, upon
         // performing a hit or heal action.
-        let message = Label::new("Hello");
+        let message = Label::new(Some("Hello"));
 
         // Add everything to our vertical box
         container.pack_start(&health_info, true, false, 0);
@@ -138,11 +137,9 @@ impl App {
         let content = Content::new(health);
 
         // Set the headerbar as the title bar widget.
-        window.set_titlebar(&header.container);
+        window.set_titlebar(Some(&header.container));
         // Set the title of the window.
         window.set_title("App Name");
-        // Set the window manager class.
-        window.set_wmclass("app-name", "App name");
         // The icon the app will display.
         Window::set_default_icon_name("iconname");
         // Add the content box into the window.
@@ -165,17 +162,17 @@ impl Header {
         let container = HeaderBar::new();
 
         // Sets the text to display in the title section of the header bar.
-        container.set_title("App Name");
+        container.set_title(Some("App Name"));
         // Enable the window controls within this headerbar.
         container.set_show_close_button(true);
 
         // Create the hit and heal buttons.
-        let hit = Button::new_with_label("Hit");
-        let heal = Button::new_with_label("Heal");
+        let hit = Button::with_label("Hit");
+        let heal = Button::with_label("Heal");
 
         // Add the corresponding style classes to those buttons.
-        hit.get_style_context().map(|c| c.add_class("destructive-action"));
-        heal.get_style_context().map(|c| c.add_class("suggested-action"));
+        hit.get_style_context().add_class("destructive-action");
+        heal.get_style_context().add_class("suggested-action");
 
         // THen add them to the header bar.
         container.pack_start(&hit);
