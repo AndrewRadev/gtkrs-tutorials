@@ -1,3 +1,5 @@
+*This fork updates the demos to more recent package versions. Currently, GTK 0.9.2. The docs, however, haven't been touched*
+
 # GTK Rust Tutorials
 
 Rendered Tutorial: https://mmstick.github.io/gtkrs-tutorials/
